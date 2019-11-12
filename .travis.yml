@@ -1,0 +1,48 @@
+language: bash
+
+env:
+  global:
+    - REPO="${TRAVIS_REPO_SLUG#*/}"
+    - OWNER=plus3it
+    - RELEASE_BRANCH=master
+    - RELEASE_VERSION=$(grep -E '^current_version' $TRAVIS_BUILD_DIR/.bumpversion.cfg | sed 's/^.*= //')
+
+jobs:
+  include:
+    - stage: test
+      name: "EditorConfig Lint"
+      install:
+        - npm install -g eclint
+        - eclint --version
+      language: node_js
+      node_js: 8
+      script:
+        - make eclint/lint
+    - stage: lint
+      language: python
+      python: 3.6
+      name: Python Lint/Format Verification
+      install: pip install -r requirements/dev.txt
+      script: make python/lint
+    - stage: deploy
+      name: "Deploy to GitHub Releases"
+      if: branch = env(RELEASE_BRANCH) AND tag IS blank
+      env:
+        - PRIOR_VERSION=$(git describe --abbrev=0 --tags)
+        - RELEASE_BODY="* [$REPO v$RELEASE_VERSION changes](https://github.com/$OWNER/$REPO/compare/$PRIOR_VERSION...$RELEASE_VERSION)"
+      before_script:
+        - echo PRIOR_VERSION=$PRIOR_VERSION
+        - echo RELEASE_VERSION=$RELEASE_VERSION
+        - echo RELEASE_BODY=$RELEASE_BODY
+      script: skip
+      deploy:
+        provider: releases
+        api_key:
+          secure:
+        name: $RELEASE_VERSION
+        tag_name: $RELEASE_VERSION
+        body: $RELEASE_BODY
+        draft: false
+        on:
+          branch: $RELEASE_BRANCH
+          condition: '"$PRIOR_VERSION" != "$RELEASE_VERSION"'
