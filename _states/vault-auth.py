@@ -6,6 +6,7 @@ import json
 import requests
 
 log = logging.getLogger(__name__)
+__virtualname__ = "vault_auth"
 
 DEPS_INSTALLED = False
 IMPORT_ERROR = ""
@@ -19,8 +20,11 @@ except ImportError as e:
 
 
 def __virtual__():
+    """
+    Determine whether or not to load this module
+    """
     if DEPS_INSTALLED:
-        return "vault-client"
+        return __virtualname__
     else:
         return False, "Missing required dependency. {}".format(IMPORT_ERROR)
 
@@ -60,8 +64,8 @@ def authenticated(
     ret = {"name": name, "comment": "", "result": "", "changes": {}}
 
     log.debug("Attempting to make an instance of the hvac.Client")
-    vault_client = __utils__["vault-client.get_vault_client"](url)
-    iam_creds = __utils__["vault-client.load_aws_ec2_role_iam_credentials"]()
+    vault_client = __utils__["vault_auth.get_vault_client"](url)
+    iam_creds = __utils__["vault_auth.load_aws_ec2_role_iam_credentials"]()
 
     combined_args = {}
     base_args = {"role": role, "mount_point": mount_point, "use_token": True}
@@ -82,8 +86,8 @@ def authenticated(
         "ec2": {
             "login": vault_client.auth.aws.ec2_login,
             "params": {
-                "pkcs7": __utils__["vault-client.load_aws_ec2_pkcs7_string"](),
-                "nonce": __utils__["vault-client.load_aws_ec2_nonce_from_disk"](),
+                "pkcs7": __utils__["vault_auth.load_aws_ec2_pkcs7_string"](),
+                "nonce": __utils__["vault_auth.load_aws_ec2_nonce_from_disk"](),
             },
         },
     }
@@ -100,13 +104,13 @@ def authenticated(
         log.debug(
             "token_meta_nonce received back from auth_ec2 call: %s" % token_meta_nonce
         )
-        __utils__["vault-client.write_aws_ec2_nonce_to_disk"](token_meta_nonce)
+        __utils__["vault_auth.write_aws_ec2_nonce_to_disk"](token_meta_nonce)
     else:
         log.warning("No token meta nonce returned in auth response.")
     # Write client token to file
     if store_token and "client_token" in auth_resp.get("auth", dict()):
         client_token = auth_resp["auth"]["client_token"]
-        __utils__["vault-client.write_client_token_to_disk"](client_token)
+        __utils__["vault_auth.write_client_token_to_disk"](client_token)
 
     ret["result"] = True
     ret["changes"] = auth_resp

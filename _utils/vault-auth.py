@@ -8,6 +8,8 @@ import os
 import hvac
 
 log = logging.getLogger(__name__)
+__virtualname__ = "vault_auth"
+
 
 TOKEN_ROOT_PATH = os.getenv("WP_VAULT_TOKEN_ROOT_PATH", "~")
 TOKEN_FILE_NAME = os.getenv("WP_VAULT_TOKEN_FILE_NAME", ".vault-token")
@@ -15,6 +17,13 @@ TOKEN_NONCE_FILE_NAME = os.getenv(
     "WP_VAULT_TOKEN_NONCE_FILE_NAME", ".vault-token-meta-nonce"
 )
 EC2_METADATA_URL_BASE = "http://169.254.169.254"
+
+
+def __virtual__():
+    """
+    Determine whether or not to load this module
+    """
+    return __virtualname__
 
 
 def load_aws_ec2_role_iam_credentials(
