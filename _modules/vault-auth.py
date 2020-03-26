@@ -1,10 +1,30 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
 
-import hvac
 import logging
 
 log = logging.getLogger(__name__)
+__virtualname__ = "vault_auth"
+
+DEPS_INSTALLED = False
+IMPORT_ERROR = ""
+try:
+    import hvac
+
+    DEPS_INSTALLED = True
+except ImportError as e:
+    IMPORT_ERROR = e
+    pass
+
+
+def __virtual__():
+    """
+    Determine whether or not to load this module
+    """
+    if DEPS_INSTALLED:
+        return __virtualname__
+    else:
+        return False, "Missing required dependency. {}".format(IMPORT_ERROR)
 
 
 def read_secret(path, key=None):
@@ -21,7 +41,7 @@ def read_secret(path, key=None):
     log.debug("Reading Vault secret for %s at %s", __grains__["id"], path)
     try:
 
-        vault_client = __utils__["vault-client.get_vault_client"]()
+        vault_client = __utils__["vault_auth.get_vault_client"]()
 
         # Making request to Vault to retrieve the secrets at a specific path
         response = vault_client._adapter.get(url="v1/{}".format(path))
