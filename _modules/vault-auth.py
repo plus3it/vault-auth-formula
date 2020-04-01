@@ -27,13 +27,14 @@ def __virtual__():
         return False, "Missing required dependency. {}".format(IMPORT_ERROR)
 
 
-def read_secret(path, key=None):
+def read_secret(path, key=None, url=None):
     """Retrieve secrets from vault cluster at a specified path
     Arguments:
         path {str} -- The path of the secret
 
     Keyword Arguments:
         key {str} -- A key of the returned secrets in vault (default: {None})
+        url {str} -- URL for the vault server (default: {None})
 
     Returns:
         string or dict -- The value of key at path in vault, or the entire secret
@@ -41,7 +42,7 @@ def read_secret(path, key=None):
     log.debug("Reading Vault secret for %s at %s", __grains__["id"], path)
     try:
 
-        vault_client = __utils__["vault_auth.get_vault_client"]()
+        vault_client = __utils__["vault_auth.get_vault_client"](url)
 
         # Making request to Vault to retrieve the secrets at a specific path
         response = vault_client._adapter.get(url="v1/{}".format(path))
