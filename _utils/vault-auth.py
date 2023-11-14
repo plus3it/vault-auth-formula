@@ -47,8 +47,11 @@ def load_aws_ec2_role_iam_credentials(
         response.raise_for_status()
         role_name = response.text
 
-    metadata_pkcs7_url = "{base}/latest/meta-data/iam/security-credentials/{role}".format(
-        base=metadata_url_base, role=role_name,
+    metadata_pkcs7_url = (
+        "{base}/latest/meta-data/iam/security-credentials/{role}".format(
+            base=metadata_url_base,
+            role=role_name,
+        )
     )
     log.debug("load_aws_ec2_role_iam_credentials connecting to %s" % metadata_pkcs7_url)
     response = requests.get(url=metadata_pkcs7_url)
@@ -170,7 +173,10 @@ def get_vault_client(url=None, verify_certs=False):
 
     # Retrieves the vault url from pillar
     vault_url = url or __pillar__["vault"]["lookup"]["url"]
-    vault_client = hvac.Client(url=vault_url, verify=verify_certs,)
+    vault_client = hvac.Client(
+        url=vault_url,
+        verify=verify_certs,
+    )
 
     vault_client.token = hvac.utils.get_token_from_env()
 
