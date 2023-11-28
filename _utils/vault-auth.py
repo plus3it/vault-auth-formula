@@ -2,6 +2,7 @@
 from __future__ import absolute_import
 
 # pylint: skip-file
+# flake8: noqa
 
 import logging
 import json
