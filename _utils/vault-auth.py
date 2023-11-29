@@ -21,7 +21,7 @@ TOKEN_NONCE_FILE_NAME = os.getenv(
 EC2_METADATA_URL_BASE = "http://169.254.169.254"
 
 
-def __virtual__():  #noqa: D100,D200,D400
+def __virtual__():  # noqa: D100,D200,D400
     """
     Determine whether or not to load this module
     """
@@ -30,7 +30,7 @@ def __virtual__():  #noqa: D100,D200,D400
 
 def load_aws_ec2_role_iam_credentials(
     role_name=None, metadata_url_base=EC2_METADATA_URL_BASE
-):  #noqa: D202,D401
+):  # noqa: D202,D401
     """Requests an ec2 instance's IAM security credentials from the EC2 metadata service.
 
     Keyword Arguments:
@@ -62,7 +62,9 @@ def load_aws_ec2_role_iam_credentials(
     return security_credentials
 
 
-def load_aws_ec2_pkcs7_string(metadata_url_base=EC2_METADATA_URL_BASE):  #noqa: D202,D401
+def load_aws_ec2_pkcs7_string(
+    metadata_url_base=EC2_METADATA_URL_BASE,
+):  # noqa: D202,D401
     """Requests an ec2 instance's pkcs7-encoded identity document from the EC2 metadata service.
 
     Keyword Arguments:
@@ -87,7 +89,7 @@ def load_aws_ec2_pkcs7_string(metadata_url_base=EC2_METADATA_URL_BASE):  #noqa: 
 
 def load_aws_ec2_nonce_from_disk(
     token_root_path=TOKEN_ROOT_PATH, token_nonce_file_name=TOKEN_NONCE_FILE_NAME
-):  #noqa: D205,D400,D401
+):  # noqa: D205,D400,D401
     """Helper method to load a previously stored "token_meta_nonce" returned in the
     initial authorization AWS EC2 request from the current instance to our Vault service.
 
@@ -121,7 +123,7 @@ def write_aws_ec2_nonce_to_disk(
     token_meta_nonce,
     token_root_path=TOKEN_ROOT_PATH,
     token_nonce_file_name=TOKEN_NONCE_FILE_NAME,
-):  #noqa: D205,D400,D401
+):  # noqa: D205,D400,D401
     """Helper method to store the current "token_meta_nonce" returned from authorization AWS EC2 request
     from the current instance to our Vault service.
 
@@ -141,7 +143,7 @@ def write_aws_ec2_nonce_to_disk(
 
 def write_client_token_to_disk(
     client_token, token_root_path=TOKEN_ROOT_PATH, token_file_name=TOKEN_FILE_NAME
-):  #noqa: D205,D400,D401
+):  # noqa: D205,D400,D401
     """Helper method to store the current "client_token" returned from authorization AWS EC2 request
     from the current instance to our Vault service.
 
@@ -156,12 +158,12 @@ def write_client_token_to_disk(
     write_value_to_disk(client_token, token_path)
 
 
-def write_value_to_disk(value, path):  #noqa: D103
+def write_value_to_disk(value, path):  # noqa: D103
     with open(path, "w") as file:
         file.write(value)
 
 
-def get_vault_client(url=None, verify_certs=False):  #noqa: D401
+def get_vault_client(url=None, verify_certs=False):  # noqa: D401
     """Instantiates a hvac / vault client.
 
     Keyword Arguments:

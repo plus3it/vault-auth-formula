@@ -23,7 +23,7 @@ except ImportError as e:
     pass
 
 
-def __virtual__():  #noqa: D200,D400
+def __virtual__():  # noqa: D200,D400
     """
     Determine whether or not to load this module
     """
@@ -43,7 +43,7 @@ def authenticated(
     use_token=True,
     store_token=True,
     store_nonce=True,
-):  #noqa: D400
+):  # noqa: D400
     """Ensure that the ec2 instance has been authenticated with Vault
 
     Arguments:
