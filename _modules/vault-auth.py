@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-  #noqa: D100
 from __future__ import absolute_import
 
 # pylint: skip-file
-# flake8: noqa
 
 import logging
 import json
@@ -21,7 +20,7 @@ except ImportError as e:
     pass
 
 
-def __virtual__():
+def __virtual__():  #noqa: D200,D400
     """
     Determine whether or not to load this module
     """
@@ -40,7 +39,7 @@ def authenticate(
     use_token=True,
     store_token=True,
     store_nonce=True,
-):
+):  #noqa: D400
     """Authenticate the ec2 instance to Vault
 
     Arguments:
@@ -109,7 +108,7 @@ def authenticate(
     return auth_resp
 
 
-def read_secret(path, key=None, url=None):
+def read_secret(path, key=None, url=None):  #noqa: D205,D400
     """Retrieve secrets from vault cluster at a specified path
     Arguments:
         path {str} -- The path of the secret
