@@ -1,5 +1,9 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-  #noqa: D100
 from __future__ import absolute_import
+
+# pylint: skip-file
+
+# flake8: noqa
 
 import logging
 import json
@@ -19,7 +23,7 @@ except ImportError as e:
     pass
 
 
-def __virtual__():
+def __virtual__():  # noqa: D200,D400
     """
     Determine whether or not to load this module
     """
@@ -39,7 +43,7 @@ def authenticated(
     use_token=True,
     store_token=True,
     store_nonce=True,
-):
+):  # noqa: D400
     """Ensure that the ec2 instance has been authenticated with Vault
 
     Arguments:
