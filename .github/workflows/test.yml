@@ -22,6 +22,7 @@ jobs:
       salt-os-version: ${{ matrix.os_version }}
       salt-state: ${{ matrix.salt_state }}
       salt-pillar-root: ${{ matrix.salt_pillar_root }}
+      salt-python-requirements-files: ./requirements/test.txt
 
   windows:
     uses: plus3it/actions-workflows/.github/workflows/test-salt-windows.yml@530b7a29b453aeadcc34a5cfc7ee63bbb1e58391
