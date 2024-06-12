@@ -2,7 +2,6 @@ install_python_dependencies:
   pip.installed:
     - pkgs:
       - hvac
-      - hvac[parser]
 {%- if salt.grains.get('pythonversion')[0] | int == 3 %}
     - target: /usr/lib/python3.6/site-packages
 {%- endif %}
